@@ -1,0 +1,2 @@
+# pinisi
+Repository proyek Pinisi
