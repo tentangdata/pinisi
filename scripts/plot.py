@@ -3,13 +3,19 @@ import pandas as pd
 import scripts.functions as functions
 
 
+TRUTH_ID = int(open('data/truth_ID').read())
+EXPERT_ID = int(open('data/expert_ID').read())
+
+
 points = pd.read_csv('data/clean/points.psv', sep='|', index_col='id')
 users = pd.read_csv('data/clean/users.psv', sep='|', index_col='id')
 levels = json.load(open('data/levels.json', 'r'))['maps']
 
+points = points[~points['user_id'].isin([TRUTH_ID, EXPERT_ID])]
+
 rects = {level['level']: functions.get_rect(level['polygon']) for level in levels}
 
 for level_id in LEVEL_IDS:
-    functions.plot_scatter(points, rects, level_id)
+    functions.plot_scatter(points, rects, level_id, grid_area=None)
 for level_id in LEVEL_IDS:
-    functions.plot_heatmap(points, rects, level_id)
+    functions.plot_heatmap(points, rects, level_id, grid_area=192 if level_id != 6 else 384)
