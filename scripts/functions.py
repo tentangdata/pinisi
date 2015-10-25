@@ -13,7 +13,13 @@ COLOR_GRID = 'lightgrey'
 GRID_LW = 0.5
 
 
-### Plotting functions
+# Data processing functions
+def filter_iqr(X, num_iqr):
+    median = X.median()
+    iqr = X.quantile(0.75) - X.quantile(0.25)
+    return X[(X >= median - iqr*num_iqr) & (X <= median + iqr*num_iqr)]
+
+# Plotting functions
 def plot_scatter(points, rects, level_id, fig_area=FIG_AREA, grid_area=GRID_AREA, with_axis=False, with_img=True, img_alpha=1.0):
     rect = rects[level_id]
     top_lat, top_lng, bot_lat, bot_lng = get_rect_bounds(rect)
@@ -60,7 +66,7 @@ def plot_heatmap(points, rects, level_id, grid_area=GRID_AREA, fig_area=FIG_AREA
     return ax
 
 
-### Helper functions
+# Helper functions
 def get_points_level(points, rects, level_id):
     rect = rects[level_id]
     top_lat, top_lng = rect[0][0], rect[0][1]
@@ -130,8 +136,7 @@ def get_bins(points, rects, level_id, grid_area=GRID_AREA, fig_area=FIG_AREA):
     coord_bins = coord_bins.loc[coord_bins.index[::-1]]    # reverse latitude (positive should be upper)
     return coord_bins
 
-
-
+# Dataset-specific functions
 def browser_to_os(browser):
     browser = browser.lower()
 
