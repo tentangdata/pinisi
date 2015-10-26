@@ -19,6 +19,33 @@ def filter_iqr(X, num_iqr):
     iqr = X.quantile(0.75) - X.quantile(0.25)
     return X[(X >= median - iqr*num_iqr) & (X <= median + iqr*num_iqr)]
 
+
+def dist(p_ref, points):
+    """ Compute distance between a reference point and a set of points.
+
+        p_ref  : (float, float)
+            lat, lng coordinates of the reference point
+        points : pd.DataFrame with (lat, lng) columns
+            Points to be computed
+
+        Returns : pd.Series with same index as points
+            Distance between points and p_ref
+    """
+    return ((points.lat - p_ref[0])**2 + (points.lng - p_ref[1])**2)**0.5
+
+
+def get_dist_level(points_ref, points_expert, points, level_id):
+    p_ref = points_ref[points_ref.level == level_id]
+    p_ref = (p_ref.lat.iloc[0], p_ref.lng.iloc[0])
+    p_expert = points_expert[points_expert.level == level_id]
+    ps = points[points.level == level_id]
+    return dist(p_ref, ps), dist(p_ref, p_expert).iloc[0]
+
+
+def calc_rect_area(rect):
+    return (rect[0][0] - rect[1][0]) * (rect[1][1] - rect[0][1])
+
+
 # Plotting functions
 def plot_scatter(points, rects, level_id, fig_area=FIG_AREA, grid_area=GRID_AREA, with_axis=False, with_img=True, img_alpha=1.0):
     rect = rects[level_id]

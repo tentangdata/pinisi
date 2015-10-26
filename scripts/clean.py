@@ -2,7 +2,7 @@ import json
 
 import pandas as pd
 
-import scripts.functions as functions
+import functions
 
 
 ### Constants
@@ -10,8 +10,8 @@ LEVEL_IDS = list(range(1, 7))
 
 
 ### Read data
-points = pd.read_csv('data/raw/points.psv', sep='|', index_col='id')
-users = pd.read_csv('data/raw/users.psv', sep='|', index_col='id')
+points = pd.read_csv('../data/raw/points.psv', sep='|', index_col='id')
+users = pd.read_csv('../data/raw/users.psv', sep='|', index_col='id')
 
 ### Merge data
 points.index = points['id']
@@ -48,5 +48,5 @@ users['is_mobile'] = users['OS_generic'].map(functions.is_mobile)
 
 
 ### Write cleaned data
-points.to_csv('data/clean/points.psv', sep='|')
-users.to_csv('data/clean/users.psv', sep='|')
+points.to_csv('../data/clean/points.psv', sep='|')
+users.to_csv('../data/clean/users.psv', sep='|')
